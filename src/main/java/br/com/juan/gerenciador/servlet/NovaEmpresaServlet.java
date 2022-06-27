@@ -3,6 +3,7 @@ package br.com.juan.gerenciador.servlet;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 public class NovaEmpresaServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+	throws ServletException, IOException {
 		String nomeEmpresa = request.getParameter("nome");
 		Empresa empresa = new Empresa();
 		empresa.setNome(nomeEmpresa);
@@ -25,8 +27,11 @@ public class NovaEmpresaServlet extends HttpServlet {
 		banco.adiciona(empresa);
 		
 		System.out.println("Cadastrando nova empresa"+nomeEmpresa);
-		PrintWriter out = response.getWriter();
-		out.print("<html><body>Empresa "+nomeEmpresa+" cadastrada com sucesso!</body></html>");
+		
+		//chamar o JSP
+		RequestDispatcher rd = request.getRequestDispatcher("/novaEmpresaCriada.jsp");
+		request.setAttribute("empresa", empresa.getNome()); //definido atributo no objeto request
+		rd.forward(request, response);
 	}
 
 }
